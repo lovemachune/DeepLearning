@@ -47,15 +47,14 @@ def draw_distributions(layers):
             continue
         weight, bias = layer.get_weights()
         plt.figure()
+        plt.subplot(121)
         plt.hist(weight.flatten(), 100)
-        plt.title(name + '_weight')
-        plt.xlabel('Value')
-        plt.ylabel('Number')
-        plt.figure()
+        plt.xlabel(name + '_weight')
+        plt.ylabel('number')
+        plt.subplot(122)
         plt.hist(bias.flatten(), 100)
-        plt.title(name + '_bias')
-        plt.xlabel('Value')
-        plt.ylabel('Number')
+        plt.xlabel(name + '_bias')
+        plt.ylabel('number')
     plt.show()
 
 def false_predict(x_test, Y_test, predict):
@@ -157,7 +156,7 @@ def normal_model(kernel_size = (3,3), stride = (1,1), flag = True):
     print(kernel_size, end=', ')
     print('stride = ', end='')
     print(stride, end='\n\n')
-    epochs = 2
+    epochs = 100
     (x_train, y_train, x_test, y_test, x_val, y_val, Y_test) = get_data()
     model = without_l2(input_size, kernel_size, stride)
     train_loss, train_acc, val_acc, test_acc = my_train(model, epochs, x_train, y_train, x_test, y_test, x_val, y_val)
@@ -181,11 +180,14 @@ def L2_model():
     input_size = (28,28,1)
     kernel_size = (3,3)
     stride = (1,1)
-    epochs = 50
+    epochs = 100
     (x_train, y_train, x_test, y_test, x_val, y_val, Y_test) = get_data()
     model = with_l2(input_size, kernel_size, stride)
     train_loss, train_acc, val_acc, test_acc = my_train(model, epochs, x_train, y_train, x_test, y_test, x_val, y_val)
     show_graph_result(model, train_loss, train_acc, val_acc, test_acc, x_test, Y_test)
+    _, accuracy = model.evaluate(x_test, y_test)
+    print("\nAcc : %lf\n" % accuracy)
+    print('------------------')
 
 def mnist_cnn():
     print('\n\n**** Normal model ****\n')

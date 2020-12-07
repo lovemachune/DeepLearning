@@ -178,6 +178,7 @@ def show_graph_result(model, train_loss, train_acc, val_acc, test_acc, x_test, X
     img1, img2 = false_predict(X_test, Y_test, model.predict(x_test))
     feature_map(model, img1)
     feature_map(model, img2)
+    plt.show()
 
 def normal_model(kernel_size = (3,3), stride = (1,1), flag = True):
     input_size = (32,32,1)
@@ -185,7 +186,7 @@ def normal_model(kernel_size = (3,3), stride = (1,1), flag = True):
     print(kernel_size, end=', ')
     print('stride = ', end='')
     print(stride, end='\n\n')
-    epochs = 2
+    epochs = 50
     model = without_l2(input_size, kernel_size, stride)
     (x_train, y_train, x_test, y_test, x_val, y_val, X_test, Y_test) = get_data()
     train_loss, train_acc, val_acc, test_acc = my_train(model, epochs, x_train, y_train, x_test, y_test, x_val, y_val)
@@ -200,21 +201,26 @@ def diff_kernel_model():
         kernel_size = (i*2+1, i*2+1)
         stride = (1,1)
         normal_model(kernel_size = kernel_size, stride = stride, flag = False)
+    '''
     for i in range(2,4):
         kernel_size = (3, 3)
         stride = (i, i)
         normal_model(kernel_size = kernel_size, stride = stride, flag = False)
+    '''
 
 def L2_model():
-    input_size = (28,28,1)
+    input_size = (32,32,1)
     kernel_size = (3,3)
     stride = (1,1)
-    epochs = 2
+    epochs = 50
     (x_train, y_train, x_test, y_test, x_val, y_val, X_test, Y_test) = get_data()
     model = with_l2(input_size, kernel_size, stride)
     (x_train, y_train, x_test, y_test, x_val, y_val, X_test, Y_test) = get_data()
     train_loss, train_acc, val_acc, test_acc = my_train(model, epochs, x_train, y_train, x_test, y_test, x_val, y_val)
     show_graph_result(model, train_loss, train_acc, val_acc, test_acc, x_test, X_test,Y_test)
+    _, accuracy = model.evaluate(x_test, y_test)
+    print("\nAcc : %lf\n" % accuracy)
+    print('------------------')
 
 
 def cifar_cnn():
